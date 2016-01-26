@@ -5,16 +5,26 @@ static TextLayer *s_time_remaining_layer;
 
 static void update_time() {
 	// Get a tm structure
-	time_t temp = time(NULL);
-	struct tm *tick_time = localtime(&temp);
+	time_t raw_time = time(NULL);
+	struct tm *tick_time = localtime(&raw_time);
 	
 	// Write the current hours and minutes into a buffer
 	static char s_buffer[8];
 	strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ?
                                           "%H:%M" : "%I:%M", tick_time);
 	
+	time_t compare_time = 1453924800;
+	time_t final_time = compare_time - raw_time;
+	struct tm *compared_time = gmtime(&final_time);
+	
+	static char s_final_buffer[8];
+	
+	strftime(s_final_buffer, sizeof(s_final_buffer), "%H:%M", compared_time);
+	
 	// Display this time on the TextLayer
 	text_layer_set_text(s_time_layer, s_buffer);
+	
+	text_layer_set_text(s_time_remaining_layer, s_final_buffer);
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -44,7 +54,7 @@ static void main_window_load(Window *window) {
 	text_layer_set_font(s_time_remaining_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
 	text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
 	text_layer_set_text_alignment(s_time_remaining_layer, GTextAlignmentLeft);
-	text_layer_set_text(s_time_remaining_layer, "testing");
+	//text_layer_set_text(s_time_remaining_layer, raw_time);
 	
 	window_set_background_color(s_main_window, GColorBlack);
 	
@@ -75,7 +85,7 @@ static void init() {
 	update_time();
 		
 	// Register with TickTimerService
-	tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+	tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 }
 
 static void deinit() {
