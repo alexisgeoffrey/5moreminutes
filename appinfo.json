@@ -1,0 +1,24 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "alexisgeoffrey",
+    "longName": "5moreminutes",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "sdkVersion": "3",
+    "shortName": "5moreminutes",
+    "targetPlatforms": [
+        "aplite",
+        "basalt",
+        "chalk"
+    ],
+    "uuid": "2807daf7-0ac2-4c18-93fa-bec7db980fed",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
