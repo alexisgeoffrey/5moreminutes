@@ -1,6 +1,7 @@
 #include <pebble.h>
 static Window *s_main_window;
 static TextLayer *s_time_layer;
+static TextLayer *s_time_remaining_layer;
 
 static void update_time() {
 	// Get a tm structure
@@ -29,14 +30,27 @@ static void main_window_load(Window *window) {
 	s_time_layer = text_layer_create(
 		GRect(0, PBL_IF_ROUND_ELSE(58, 52), bounds.size.w, 50));
 	
-	// Improve the layout to be more like a watchface
-	text_layer_set_background_color(s_time_layer, GColorClear);
-	text_layer_set_text_color(s_time_layer, GColorBlack);
+	s_time_remaining_layer = text_layer_create(
+		GRect(0, 100, bounds.size.w, 30));
+	
+	//text_layer_create(GRect(x, y, w, h))
+	
+	// Layer properties
+	text_layer_set_background_color(s_time_layer, GColorBlack);
+	text_layer_set_background_color(s_time_remaining_layer, GColorBlack);
+	text_layer_set_text_color(s_time_layer, GColorWhite);
+	text_layer_set_text_color(s_time_remaining_layer, GColorWhite);
 	text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
+	text_layer_set_font(s_time_remaining_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
 	text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
+	text_layer_set_text_alignment(s_time_remaining_layer, GTextAlignmentLeft);
+	text_layer_set_text(s_time_remaining_layer, "testing");
+	
+	window_set_background_color(s_main_window, GColorBlack);
 	
 	// Add it as a child layer to the Window's root layer
 	layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
+	layer_add_child(window_layer, text_layer_get_layer(s_time_remaining_layer));
 }
 
 static void main_window_unload(Window *window) {
