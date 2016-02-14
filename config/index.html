@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Slate Example Configuration</title>
+  <link rel='stylesheet' type='text/css' href='css/slate.min.css'>
+  <style>
+  .title {
+    padding: 15px 10px;
+    text-transform: uppercase;
+    font-family: 'PT Sans', sans-serif;
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #888888;
+    text-align: center;
+  }
+  </style>
+  </head>
+
+  <body>
+    <h1 class='title'>5moreminutes Configuration</h1>
+
+    <div class='item-container'>
+      <div class='item-container-content'>
+        <div class='item'>
+          Use this configuration page to add class times.
+        </div>
+      </div>
+    </div>
+
+    <div class='item-container'>
+      <div class='item-container-header'>Time Input</div>
+      <div class='item-container-content'>
+        <label class='item'>
+          <div class='item-input-wrapper'>
+			<input id='start_time_text' type='text' class='item-input' placeholder='Start Time'>
+		  </div>
+		</label>
+		<label class='item'>
+			<div class='item-input-wrapper'>
+				<input id='end_time_text' type='text' class='item-input' placeholder='End Time'>
+			</div>
+      </div>
+      <div class='item-container-footer'>
+        Input times in "00:00" format.
+      </div>
+    </div>
+
+    <div class='item-container'>
+      <div class='button-container'>
+        <input id='submit_button' type='button' class='item-button' value='SAVE'>
+      </div>
+    </div>
+    
+    <script src='/js/slate.min.js'></script>
+    <script src='/js/main.js'></script>
+  </body>
+</html>

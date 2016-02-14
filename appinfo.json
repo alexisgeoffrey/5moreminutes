@@ -1,13 +1,25 @@
 {
-    "appKeys": {},
+    "appKeys": {
+        "END_TIME_IN": 1,
+        "START_TIME_IN": 0
+    },
     "capabilities": [
-        ""
+        "configurable"
     ],
     "companyName": "alexisgeoffrey",
+    "enableMultiJS": false,
     "longName": "5moreminutes",
     "projectType": "native",
     "resources": {
-        "media": []
+        "media": [
+            {
+                "file": "images/icon",
+                "menuIcon": true,
+                "name": "app_icon",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            }
+        ]
     },
     "sdkVersion": "3",
     "shortName": "5moreminutes",
@@ -16,9 +28,9 @@
         "basalt",
         "chalk"
     ],
-    "uuid": "2807daf7-0ac2-4c18-93fa-bec7db980fed",
+    "uuid": "b3dd40a5-5fc1-4b0d-a015-4a329f9999eb",
     "versionLabel": "1.0",
     "watchapp": {
-        "watchface": true
+        "watchface": false
     }
 }
