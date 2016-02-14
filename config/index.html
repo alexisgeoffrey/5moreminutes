@@ -53,16 +53,21 @@
     </div>
   </body>
   <script>
-
+  function getConfigData() {
+    var startTime = document.getElementById('start_time_text');
+    var endTime = document.getElementById('end_time_text');
+ 
+    var options = {
+      'start_Time': startTime.value,
+      'end_Time': endTime.value
+    };
     // Save for next launch
-    localStorage['start_time'] = options['start_time'];
-    localStorage['end_time'] = options['end_time'];
-
+    localStorage['start_Time'] = options['start_Time'];
+    localStorage['end_Time'] = options['end_Time'];
     console.log('Got options: ' + JSON.stringify(options));
     return options;
   }
- 
- function getQueryParam(variable, defaultValue) {
+  function getQueryParam(variable, defaultValue) {
     var query = location.search.substring(1);
     var vars = query.split('&');
     for (var i = 0; i < vars.length; i++) {
@@ -73,19 +78,22 @@
     }
     return defaultValue || false;
   }
-  
+ 
   var submitButton = document.getElementById('submit_button');
   submitButton.addEventListener('click', function() {
     console.log('Submit');
-
-    var config = {
-    	'startTime' : 00:00,
-    	'endTime' : 05:00
-    };
-    
-    // Return data to watchapp
-    location.href = 'pebblejs://close#' + 
-    encodeURIComponent(JSON.stringify(config));
+    // Set the return URL depending on the runtime environment
+    var return_to = getQueryParam('return_to', 'pebblejs://close#');
+    document.location = return_to + encodeURIComponent(JSON.stringify(getConfigData()));
   });
+  (function() {
+    var startTime = document.getElementById('start_time_text');
+    var endTime = document.getElementById('end_time_text');
+    // Load any previously saved configuration, if available
+    if(localStorage['end_Time']) {
+      startTime.value = localStorage['start_Time']);
+      endTime.value = localStorage['end_Time'];
+    }
+  })();
   </script>
 </html>
