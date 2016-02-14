@@ -4,7 +4,7 @@
 })();
 
 function submitHandler() {
-  var $submitButton = $('#submit_button');
+  var $submitButton = $('submit_button');
   
   $submitButton.on('click', function() {
     console.log('Submit');
