@@ -4,9 +4,9 @@
 })();
 
 function submitHandler() {
-  var $submitButton = 'submit_button';
+  var $submit_button = ('$submit_button');
   
-  $submitButton.on('click', function() {
+  $submit_button.on('click', function() {
     console.log('Submit');
     
     var return_to = getQueryParam('return_to', 'pebblejs://close#');
