@@ -5,7 +5,6 @@ static TextLayer *s_time_remaining_layer;
 static Layer *s_progress_layer;
 //static int end_hour = 23;
 //static int end_minute = 50;
-//static Layer *s_progressBG_layer;
 float prog_difference;
 
 static void update_time() {
@@ -24,14 +23,14 @@ static void update_time() {
 	//time_t destination_time = raw_time + (end_hour*60*60) + (end_minute*60);
 	//tick_time_gm->tm_hour = 11;
 	
-	struct tm *begin_time = tick_time;
-	begin_time->tm_hour = 16;
-	begin_time->tm_min = 0;
+	struct tm *begin_time = localtime(&raw_time);
+	begin_time->tm_hour = 23;
+	begin_time->tm_min = 30;
 	begin_time->tm_sec = 0;
 	time_t start_time = mktime(begin_time);
 	
-	struct tm *end_time = tick_time;
-	end_time->tm_hour = 23;
+	struct tm *end_time = localtime(&raw_time);
+	end_time->tm_hour = 24;
 	end_time->tm_min = 0;
 	end_time->tm_sec = 0;
 	time_t destination_time = mktime(end_time);
@@ -43,20 +42,20 @@ static void update_time() {
 	int raw_final_minutes = (raw_final_time / 60) % 60;
 	int raw_final_hours = raw_final_time / 3600;
 	
-	//prog_difference = raw_final_time / raw_overall_time;
-	prog_difference = .44446;
+	prog_difference = ((float)raw_final_time / raw_overall_time);
+	//prog_difference = .44446;
 	
-	struct tm *compared_time = gmtime(&raw_final_time);
+	//struct tm *compared_time = gmtime(&raw_final_time);
 	
 	static char s_final_buffer[] = "00:00:00 remaining";
 	
 	//strftime(s_final_buffer, sizeof(s_final_buffer), "%H:%M:%S", compared_time);
-	snprintf(s_final_buffer, sizeof(s_final_buffer), "%d:%d:%d", raw_final_hours, raw_final_minutes, raw_final_seconds);
+	snprintf(s_final_buffer, sizeof(s_final_buffer), "%02d:%02d:%02d", raw_final_hours, raw_final_minutes, raw_final_seconds);
 	strcat(s_final_buffer, " remaining");
 	
 	// Display this time on the TextLayer
-	//snprintf(s_final_buffer, sizeof(s_buffer), "%d.%03d", (int)(prog_difference), (int)(prog_difference * 1000) % 1000);
-	//snprintf(s_final_buffer, sizeof(s_buffer), "%d", (int)(raw_overall_time));
+	//snprintf(s_final_buffer, sizeof(s_buffer), "%d", (int)(prog_difference * 1000));
+	//snprintf(s_final_buffer, sizeof(s_buffer), "%d", (int)(raw_final_time));
 	text_layer_set_text(s_time_layer, s_buffer);
 	text_layer_set_text(s_time_remaining_layer, s_final_buffer);
 }
@@ -73,7 +72,8 @@ static void progress_update_proc(Layer *layer, GContext *ctx) {
 	graphics_fill_rect(ctx, bounds, 0, GCornerNone);
 	
 	graphics_context_set_fill_color(ctx, GColorBlack);
-	graphics_fill_rect(ctx, GRect(5, 5, ((bounds.size.w - 10) * prog_difference), bounds.size.h - 10), 0, GCornerNone);
+	int bar_size = bounds.size.w-10 - ((bounds.size.w - 10) * prog_difference);
+	graphics_fill_rect(ctx, GRect(5, 5, bar_size, bounds.size.h - 10), 0, GCornerNone);
 	//APP_LOG(APP_LOG_LEVEL_DEBUG, "prog_difference = %f", prog_difference);
 }
 
