@@ -1,57 +1,49 @@
 <!DOCTYPE html>
-<html>
-  <head>
-  <title>Slate Example Configuration</title>
-  <link rel='stylesheet' type='text/css' href='css/slate.min.css'>
-  <style>
-  .title {
-    padding: 15px 10px;
-    text-transform: uppercase;
-    font-family: 'PT Sans', sans-serif;
-    font-size: 1.2em;
-    font-weight: 500;
-    color: #888888;
-    text-align: center;
-  }
-  </style>
-  </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel='stylesheet' type='text/css' href='/bower_components/pebble-slate/dist/css/slate.min.css'>
+  <link rel='stylesheet' type='text/css' href='/css/style.css'>
+</head>
+<body>
+  <div class='item-container'>
+    <h1 class='title'>Watchface<br>Configuration Page</h1>
+  </div>
 
-  <body>
-    <h1 class='title'>5moreminutes Configuration</h1>
-
-    <div class='item-container'>
-      <div class='item-container-content'>
-        <div class='item'>
-          Use this configuration page to add class times.
-        </div>
+  <div class='item-container'>
+    <div class='item-container-content'>
+      <div class='item'>
+        Use this configuration page to choose the settings you would like
+        applied to this app.
       </div>
     </div>
+  </div>
 
-    <div class='item-container'>
-      <div class='item-container-header'>Time Input</div>
-      <div class='item-container-content'>
-        <label class='item'>
-          <div class='item-input-wrapper'>
-			<input id='start_time_text' type='text' class='item-input' placeholder='Start Time'>
-		  </div>
-		</label>
-		<label class='item'>
-			<div class='item-input-wrapper'>
-				<input id='end_time_text' type='text' class='item-input' placeholder='End Time'>
-			</div>
-      </div>
-      <div class='item-container-footer'>
-        Input times in "00:00" format.
-      </div>
+  <div class='item-container'>
+    <div class='item-container-header'>Customizability</div>
+    <div class='item-container-content'>
+      <label class='item'>
+        Background Color
+        <input id='backgroundColorPicker' type='text' class='item-color item-color-sunny' value='#000000'>
+      </label>
+      <label class='item'>
+        24-Hour Format
+        <input id='timeFormatCheckbox' type='checkbox' class='item-checkbox' checked>
+      </label>
     </div>
+    <div class='item-container-footer'>
+      These settings only change on the watch after you click save.
+    </div>
+  </div>
 
-    <div class='item-container'>
-      <div class='button-container'>
-        <input id='submit_button' type='button' class='item-button' value='SAVE'>
-      </div>
+  <div class='item-container'>
+    <div class='button-container'>
+      <input id='submitButton' type='button' class='item-button' value='SUBMIT'>
     </div>
-    
-    <script src='/js/slate.min.js'></script>
-    <script src='/js/main.js'></script>
-  </body>
+  </div>
+
+  <script src='/bower_components/pebble-slate/dist/js/slate.min.js'></script>
+  <script src='/js/main.js'></script>
+</body>
 </html>
