@@ -4,38 +4,38 @@
 })();
 
 function submitHandler() {
-  var $submitButton = $('#submit_button');
-  
+  var $submitButton = $('#submitButton');
+
   $submitButton.on('click', function() {
     console.log('Submit');
-    
+
     var return_to = getQueryParam('return_to', 'pebblejs://close#');
     document.location = return_to + encodeURIComponent(JSON.stringify(getAndStoreConfigData()));
   });
 }
-  
+
 function loadOptions() {
-  var $startTime = $('#start_time_text');
-  var $endTime = $('#end_time_text');
-  
-  if (localStorage.start_Time) {
-    $startTime[0].value = localStorage.start_Time;
-    $endTime[0].value = localStorage.end_Time;
+  var $backgroundColorPicker = $('#backgroundColorPicker');
+  var $timeFormatCheckbox = $('#timeFormatCheckbox');
+
+  if (localStorage.backgroundColor) {
+    $backgroundColorPicker[0].value = localStorage.backgroundColor;
+    $timeFormatCheckbox[0].checked = localStorage.twentyFourHourFormat === 'true';
   }
 }
 
 function getAndStoreConfigData() {
-  var $startTime = $('#start_time_text');
-  var $endTime = $('#end_time_text');
-  
+  var $backgroundColorPicker = $('#backgroundColorPicker');
+  var $timeFormatCheckbox = $('#timeFormatCheckbox');
+
   var options = {
-    start_Time: $startTime.val(),
-    end_Time: $endTime.val()
+    backgroundColor: $backgroundColorPicker.val(),
+    twentyFourHourFormat: $timeFormatCheckbox[0].checked
   };
-  
-  localStorage.startTime = options.startTime;
-  localStorage.endTime = options.endTime;
-  
+
+  localStorage.backgroundColor = options.backgroundColor;
+  localStorage.twentyFourHourFormat = options.twentyFourHourFormat;
+
   console.log('Got options: ' + JSON.stringify(options));
   return options;
 }
