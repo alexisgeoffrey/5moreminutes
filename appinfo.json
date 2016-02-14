@@ -1,9 +1,10 @@
 {
     "appKeys": {},
     "capabilities": [
-        ""
+        "configurable"
     ],
     "companyName": "alexisgeoffrey",
+    "enableMultiJS": false,
     "longName": "5moreminutes",
     "projectType": "native",
     "resources": {
@@ -19,6 +20,6 @@
     "uuid": "2807daf7-0ac2-4c18-93fa-bec7db980fed",
     "versionLabel": "1.0",
     "watchapp": {
-        "watchface": true
+        "watchface": false
     }
 }
