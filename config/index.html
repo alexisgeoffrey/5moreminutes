@@ -53,14 +53,6 @@
     </div>
   </body>
   <script>
-  function getConfigData() {
-    var startingTime = document.getElementById('start_time_text');
-    var highContrastCheckbox = document.getElementById('high_contrast_checkbox');
- 
-    var options = {
-      'start_time': startingTime.value,
-      'end_time': endingTime.value
-    };
 
     // Save for next launch
     localStorage['start_time'] = options['start_time'];
@@ -69,37 +61,19 @@
     console.log('Got options: ' + JSON.stringify(options));
     return options;
   }
-
-  function getQueryParam(variable, defaultValue) {
-    var query = location.search.substring(1);
-    var vars = query.split('&');
-    for (var i = 0; i < vars.length; i++) {
-      var pair = vars[i].split('=');
-      if (pair[0] === variable) {
-        return decodeURIComponent(pair[1]);
-      }
-    }
-    return defaultValue || false;
-  }
  
   var submitButton = document.getElementById('submit_button');
   submitButton.addEventListener('click', function() {
     console.log('Submit');
 
-    // Set the return URL depending on the runtime environment
-    var return_to = getQueryParam('return_to', 'pebblejs://close#');
-    document.location = return_to + encodeURIComponent(JSON.stringify(getConfigData()));
+    var config = {
+    	'startTime' : start_time,
+    	'endTime' : end_time
+    };
+    
+    // Return data to watchapp
+  location.href = 'pebblejs://close#' + 
+    encodeURIComponent(JSON.stringify(config));
   });
-
-  (function() {
-    var backgroundColorPicker = document.getElementById('background_color_picker');
-    var highContrastCheckbox = document.getElementById('high_contrast_checkbox');
-
-    // Load any previously saved configuration, if available
-    if(localStorage['high_contrast']) {
-      highContrastCheckbox.checked = JSON.parse(localStorage['high_contrast']);
-      backgroundColorPicker.value = localStorage['background_color'];
-    }
-  })();
   </script>
 </html>
