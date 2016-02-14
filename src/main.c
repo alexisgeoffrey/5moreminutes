@@ -1,4 +1,7 @@
 #include <pebble.h>
+
+#define START_TIME_IN 0
+#define END_TIME_IN   1
 static Window *s_main_window;
 static TextLayer *s_time_layer;
 static TextLayer *s_time_remaining_layer;
@@ -6,6 +9,8 @@ static Layer *s_progress_layer;
 //static int end_hour = 23;
 //static int end_minute = 50;
 float prog_difference;
+int input_Start;
+int input_End;
 
 static void update_time() {
 	// Get a tm structure
@@ -22,15 +27,15 @@ static void update_time() {
 	
 	//time_t destination_time = raw_time + (end_hour*60*60) + (end_minute*60);
 	//tick_time_gm->tm_hour = 11;
-	
+	//input_Start = 5;
 	struct tm *begin_time = localtime(&raw_time);
-	begin_time->tm_hour = 23;
-	begin_time->tm_min = 30;
+	begin_time->tm_hour = input_Start;
+	begin_time->tm_min = 0;
 	begin_time->tm_sec = 0;
 	time_t start_time = mktime(begin_time);
 	
 	struct tm *end_time = localtime(&raw_time);
-	end_time->tm_hour = 24;
+	end_time->tm_hour = input_End;
 	end_time->tm_min = 0;
 	end_time->tm_sec = 0;
 	time_t destination_time = mktime(end_time);
@@ -55,10 +60,27 @@ static void update_time() {
 	
 	// Display this time on the TextLayer
 	//snprintf(s_final_buffer, sizeof(s_buffer), "%d", (int)(prog_difference * 1000));
-	//snprintf(s_final_buffer, sizeof(s_buffer), "%d", (int)(raw_final_time));
+	//snprintf(s_final_buffer, sizeof(s_final_buffer), "%d %d", (int)(final_input_Start), (int)(final_input_End));
 	text_layer_set_text(s_time_layer, s_buffer);
 	text_layer_set_text(s_time_remaining_layer, s_final_buffer);
 }
+
+static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+  	Tuple *start_time_t = dict_find(iter, START_TIME_IN);
+  	Tuple *end_time_t = dict_find(iter, END_TIME_IN);
+	//dict_find(received, KEY_A)->value->uint32
+
+	input_Start = start_time_t->value->int32;
+    input_End = end_time_t->value->int32;
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "input_Start = %d", (int)start_time_t->value->int32);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "input_Start after = %d", input_Start);
+	
+	//final_input_Start = input_Start;
+	//final_input_End = input_End;
+	
+}
+
+//static void update_Input
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 	update_time();
@@ -139,6 +161,9 @@ static void init() {
 		
 	// Register with TickTimerService
 	tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+	
+	app_message_register_inbox_received(inbox_received_handler);
+ 	app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 }
 
 static void deinit() {
