@@ -14,7 +14,6 @@ Pebble.addEventListener('webviewclosed', function(e) {
   var configData = JSON.parse(decodeURIComponent(e.response));
 
   console.log('Configuration page returned: ' + JSON.stringify(configData));
-	console.log("ending time was " + configData.ending_Time);
 
   if (configData.starting_Time) {
     Pebble.sendAppMessage({

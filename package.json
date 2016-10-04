@@ -1,0 +1,40 @@
+{
+    "author": "alexisgeoffrey",
+    "dependencies": {},
+    "keywords": [],
+    "name": "5moreminutes",
+    "pebble": {
+        "capabilities": [
+            "configurable"
+        ],
+        "displayName": "5moreminutes",
+        "enableMultiJS": false,
+        "messageKeys": {
+            "END_TIME_IN": 1,
+            "START_TIME_IN": 0
+        },
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/icon",
+                    "menuIcon": true,
+                    "name": "app_icon",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "chalk"
+        ],
+        "uuid": "b3dd40a5-5fc1-4b0d-a015-4a329f9999eb",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "1.0.0"
+}
