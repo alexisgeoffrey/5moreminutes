@@ -2,56 +2,67 @@
 
 #define START_TIME_IN 0
 #define END_TIME_IN   1
+
 static Window *s_main_window;
 static TextLayer *s_time_layer;
 static TextLayer *s_time_remaining_layer;
 static Layer *s_progress_layer;
-//static int end_hour = 23;
-//static int end_minute = 50;
-float prog_difference;
-int input_Start;
-int input_End;
+static float prog_difference = 0.5;
+static int input_Start;
+static int input_End;
 
 static void update_time() {
 	// Get a tm structure
 	time_t raw_time = time(NULL);
 	struct tm *tick_time = localtime(&raw_time);
-	//struct tm *tick_time_gm = gmtime(&raw_time);
-
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "tick_time->tm_hour: %d", tick_time->tm_hour);
 	
 	// Write the current hours and minutes into a buffer
-	static char s_buffer[20];
-	//static char s_buffer[8];
+	static char s_buffer[8];
 	strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ?
                                           "%H:%M" : "%I:%M", tick_time);
-	
-	//time_t destination_time = raw_time + (end_hour*60*60) + (end_minute*60);
-	//tick_time_gm->tm_hour = 11;
-	//input_Start = 5;
+
 	struct tm *begin_time = localtime(&raw_time);
+	//struct tm *end_time = localtime(&raw_time);
+
 	begin_time->tm_hour = input_Start;
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "begin_time->tm_hour = input_Start: %d", begin_time->tm_hour);
 	begin_time->tm_min = 0;
 	begin_time->tm_sec = 0;
+	
 	time_t start_time = mktime(begin_time);
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "start_time: %li", start_time);
+	
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "begin_time parameters after mktime: tm_hour=%d, tm_min=%d, tm_sec=%d, tm_mday=%d, tm_mon=%d, tm_year=%d",
+	//		begin_time->tm_hour, begin_time->tm_min, begin_time->tm_sec, begin_time->tm_mday, begin_time->tm_mon, begin_time->tm_year);
 	
 	struct tm *end_time = localtime(&raw_time);
 	end_time->tm_hour = input_End;
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "end_time->tm_hour = input_End: %d", end_time->tm_hour);
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "start_time: %li", start_time);
 	end_time->tm_min = 0;
 	end_time->tm_sec = 0;
+	
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "end_time parameters before mktime: tm_hour=%d, tm_min=%d, tm_sec=%d, tm_mday=%d, tm_mon=%d, tm_year=%d",
+	//		begin_time->tm_hour, begin_time->tm_min, begin_time->tm_sec, begin_time->tm_mday, begin_time->tm_mon, begin_time->tm_year);
+	
 	time_t destination_time = mktime(end_time);
 	
-	//time_t compare_time = 1453924800;
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "end_time parameters after mktime: tm_hour=%d, tm_min=%d, tm_sec=%d, tm_mday=%d, tm_mon=%d, tm_year=%d",
+	//		end_time->tm_hour, end_time->tm_min, end_time->tm_sec, end_time->tm_mday, end_time->tm_mon, end_time->tm_year);	APP_LOG(APP_LOG_LEVEL_DEBUG, "destination_time: %li", destination_time);
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "destination_time: %li", destination_time);
+	
 	time_t raw_overall_time = destination_time - start_time;
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "raw_overall_time: %li", raw_overall_time);
 	time_t raw_final_time = destination_time - raw_time;
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "raw_final_time: %li", raw_final_time);
 	int raw_final_seconds = raw_final_time % 60;
 	int raw_final_minutes = (raw_final_time / 60) % 60;
 	int raw_final_hours = raw_final_time / 3600;
 	
 	prog_difference = ((float)raw_final_time / raw_overall_time);
-	//prog_difference = .44446;
-	
-	//struct tm *compared_time = gmtime(&raw_final_time);
-	
+	layer_mark_dirty(s_progress_layer);
+		
 	static char s_final_buffer[] = "00:00:00 remaining";
 	
 	//strftime(s_final_buffer, sizeof(s_final_buffer), "%H:%M:%S", compared_time);
@@ -59,7 +70,6 @@ static void update_time() {
 	strcat(s_final_buffer, " remaining");
 	
 	// Display this time on the TextLayer
-	//snprintf(s_final_buffer, sizeof(s_buffer), "%d", (int)(prog_difference * 1000));
 	//snprintf(s_final_buffer, sizeof(s_final_buffer), "%d %d", (int)(final_input_Start), (int)(final_input_End));
 	text_layer_set_text(s_time_layer, s_buffer);
 	text_layer_set_text(s_time_remaining_layer, s_final_buffer);
@@ -70,21 +80,18 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   	Tuple *end_time_t = dict_find(iter, END_TIME_IN);
 	//dict_find(received, KEY_A)->value->uint32
 
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "input_Start after message received = %d", input_Start);
 	input_Start = start_time_t->value->int32;
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "input_Start after storage = %d", input_Start);
     input_End = end_time_t->value->int32;
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "input_Start = %d", (int)start_time_t->value->int32);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "input_Start after = %d", input_Start);
 	
-	//final_input_Start = input_Start;
-	//final_input_End = input_End;
+	persist_write_int(START_TIME_IN, input_Start);
+	persist_write_int(END_TIME_IN, input_End);
 	
 }
 
-//static void update_Input
-
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 	update_time();
-	//update_progress();
 }
 
 static void progress_update_proc(Layer *layer, GContext *ctx) {
@@ -94,6 +101,8 @@ static void progress_update_proc(Layer *layer, GContext *ctx) {
 	graphics_fill_rect(ctx, bounds, 0, GCornerNone);
 	
 	graphics_context_set_fill_color(ctx, GColorBlack);
+	if(prog_difference < 0) {prog_difference = .5;}
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "prog_diff before crash: %f", prog_difference);
 	int bar_size = bounds.size.w-10 - ((bounds.size.w - 10) * prog_difference);
 	graphics_fill_rect(ctx, GRect(5, 5, bar_size, bounds.size.h - 10), 0, GCornerNone);
 	//APP_LOG(APP_LOG_LEVEL_DEBUG, "prog_difference = %f", prog_difference);
@@ -138,9 +147,10 @@ static void main_window_load(Window *window) {
 }
 
 static void main_window_unload(Window *window) {
-	// Destroy TextLayer
+	// Destroy layers
 	text_layer_destroy(s_time_layer);
 	text_layer_destroy(s_time_remaining_layer);
+	layer_destroy(s_progress_layer);
 }
 
 static void init() {
@@ -156,6 +166,17 @@ static void init() {
 	// Show the Window on the watch, with animated=true
 	window_stack_push(s_main_window, true);
 	
+	// Persist data read
+	input_Start = 0;
+	input_End = 1;
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "contained in persist: %d", START_TIME_IN);
+	if (persist_exists(START_TIME_IN)) {
+  		input_Start = persist_read_int(START_TIME_IN);
+	}
+	if (persist_exists(END_TIME_IN)) {
+		input_End = persist_read_int(END_TIME_IN);
+	}
+	
 	// Make sure the time is displayed from the start
 	update_time();
 		
@@ -164,9 +185,13 @@ static void init() {
 	
 	app_message_register_inbox_received(inbox_received_handler);
  	app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "contained in persist: %s", tomato);
 }
 
 static void deinit() {
+	tick_timer_service_unsubscribe();
+	app_message_deregister_callbacks();
+	
 	// Destroy Window
 	window_destroy(s_main_window);
 }
