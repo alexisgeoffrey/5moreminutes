@@ -3,7 +3,7 @@ Pebble.addEventListener('ready', function() {
 });
 
 Pebble.addEventListener('showConfiguration', function() {
-  var url = 'http://randa.xyz/pebble_config/index.html';
+  var url = 'https://fivemoreminutes-settings.herokuapp.com/';
 
   console.log('Showing configuration page: ' + url);
 
